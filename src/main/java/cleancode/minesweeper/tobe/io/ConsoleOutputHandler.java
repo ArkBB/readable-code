@@ -1,0 +1,50 @@
+package cleancode.minesweeper.tobe.io;
+
+import cleancode.minesweeper.tobe.GameException;
+import cleancode.minesweeper.tobe.Cell;
+
+public class ConsoleOutputHandler {
+
+    public void showBoard(Cell[][] board) {
+        System.out.println("   a b c d e f g h i j");
+        for (int row = 0; row < board.length; row++) {
+            System.out.printf("%d  ", row + 1);
+            for (int col = 0; col < board[0].length; col++) {
+                System.out.print(board[row][col].getSign() + " ");
+                //여기서는 Getter를 안 쓰는게 이상하다.
+            }
+            System.out.println();
+        }
+        System.out.println();
+    }
+
+    public void showGameStartComments() {
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+        System.out.println("지뢰찾기 게임 시작!");
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+    }
+
+    public void printGameClear() {
+        System.out.println("지뢰를 모두 찾았습니다. GAME CLEAR!");
+    }
+
+    public void printGameOver() {
+        System.out.println("지뢰를 밟았습니다. GAME OVER!");
+    }
+
+    public void printCoordinateInputComment() {
+        System.out.println("선택할 좌표를 입력하세요. (예: a1)");
+    }
+
+    public void printUserActionInputComment(){
+        System.out.println("선택한 셀에 대한 행위를 선택하세요. (1: 오픈, 2: 깃발 꽂기)");
+    }
+
+    public void printErrMessage(GameException E) {
+        System.out.println(E.getMessage());
+    }
+
+    public void printMessage(String message){
+        System.out.println(message);
+    }
+}
