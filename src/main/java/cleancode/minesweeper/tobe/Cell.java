@@ -2,6 +2,11 @@ package cleancode.minesweeper.tobe;
 
 public class Cell {
 
+    private static final String CLOSED_CELL_SIGN = "■";
+    private static final String OPENED_CELL_SIGN = "□";
+    private static final String FLAG_SIGN = "⚑";
+    private static final String LANDMINE_SIGN = "☼";
+
     private final String sign;
 
     private Cell(String sign) {
@@ -12,6 +17,26 @@ public class Cell {
         return new Cell(sign);
     }
 
+    public static Cell ofFlag(){
+        return of(FLAG_SIGN);
+    }
+
+    public static Cell ofLandMine(){
+        return of(LANDMINE_SIGN);
+    }
+
+    public static Cell ofClosed() {
+        return of(CLOSED_CELL_SIGN);
+    }
+
+    public static Cell ofOpened() {
+        return of(OPENED_CELL_SIGN);
+    }
+
+    public static Cell ofNearbyLandMineCount(int count) {
+        return of(String.valueOf(count));
+    }
+
     public boolean equalsSign(String sign) {
         return this.sign.equals(sign);
     }
@@ -20,7 +45,11 @@ public class Cell {
         return sign;
     }
 
-    public boolean doesNotEqualSign(String sign) {
-        return !equalsSign(sign);
+    public boolean isClosed() {
+        return equalsSign(CLOSED_CELL_SIGN);
+    }
+
+    public boolean isNotClosed() {
+        return !isClosed();
     }
 }
