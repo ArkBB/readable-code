@@ -8,17 +8,24 @@ public class Cell {
     private static final String LANDMINE_SIGN = "☼";
 
     private final String sign;
+    private final int nearbyLandMineCount;
+    private final boolean isLandMine;
 
-    private Cell(String sign) {
+    // Cell이 가진 속성 : 근처 지뢰 숫자, 지뢰 여부
+    // Cell의 상태 : 깃발 유무, 열렸다/닫혔다, 사용자가 확인함(닫혀있지만 사용자가 깃발을 꽂음)
+
+    private Cell(String sign, int nearbyLandMineCount, boolean isLandMine) {
         this.sign = sign;
+        this.nearbyLandMineCount = nearbyLandMineCount;
+        this.isLandMine = isLandMine;
     }
 
-    public static Cell of(String sign){
-        return new Cell(sign);
+    public static Cell of(String sign,int nearbyLandMineCount, boolean isLandMine){
+        return new Cell(sign,nearbyLandMineCount,isLandMine);
     }
 
     public static Cell ofFlag(){
-        return of(FLAG_SIGN);
+        return of(FLAG_SIGN,0,false);
     }
 
     public static Cell ofLandMine(){
