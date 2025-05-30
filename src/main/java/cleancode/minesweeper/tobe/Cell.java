@@ -55,7 +55,7 @@ public class Cell {
         this.isOpened = true;
     }
 
-    public boolean hasLandMineNearBy() {
+    public boolean hasLandMineCount() {
         return nearbyLandMineCount > 0;
     }
 
