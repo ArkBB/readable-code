@@ -1,17 +1,21 @@
 package cleancode.minesweeper.tobe;
 
+import cleancode.minesweeper.tobe.gameLevel.GameLevel;
 import cleancode.minesweeper.tobe.io.ConsoleInputHandler;
 import cleancode.minesweeper.tobe.io.ConsoleOutputHandler;
 
 public class Minesweeper {
 
-    public static final int BOARD_ROW_SIZE = 8;
-    public static final int BOARD_COL_SIZE = 10;
 
-    private final GameBoard gameBoard = new GameBoard(BOARD_ROW_SIZE, BOARD_COL_SIZE);
+    private final GameBoard gameBoard;
     private final ConsoleInputHandler consoleInputHandler = new ConsoleInputHandler();
     private final ConsoleOutputHandler consoleOutputHandler = new ConsoleOutputHandler();
+    private final BoardIndexConverter boardIndexConverter = new BoardIndexConverter();
     private static int gameStatus = 0; // 0: 게임 중, 1: 승리, -1: 패배
+
+    public Minesweeper(GameLevel gameLevel) {
+        this.gameBoard = new GameBoard(gameLevel);
+    }
 
     public void run() {
 
@@ -45,8 +49,8 @@ public class Minesweeper {
     }
     
     private void actOnCell(String input, String userActionInput) {
-        int selectedColIndex = extractSelectedColIndex(input);
-        int selectedRowIndex = extractSelectedRowIndex(input);
+        int selectedColIndex = boardIndexConverter.extractSelectedColIndex(input,gameBoard.getColSize());
+        int selectedRowIndex = boardIndexConverter.extractSelectedRowIndex(input,gameBoard.getLowSize());
 
         if (doesUserChooseToPlantFlag(userActionInput)) {
             gameBoard.flag(selectedRowIndex,selectedColIndex);
@@ -106,65 +110,6 @@ public class Minesweeper {
     private void changeGameStatusToWin() {
         gameStatus = 1;
     }
-
-
-
-    private int convertRowFrom(char cellInputRow) {
-        int selectedRowIndex = Character.getNumericValue(cellInputRow) - 1;
-        if (selectedRowIndex >= BOARD_ROW_SIZE) {
-            throw new IllegalArgumentException("잘못된 ROW 입력입니다.");
-        }
-
-        return selectedRowIndex;
-    }
-
-    private int extractSelectedColIndex(String input) {
-        return convertColFrom(input.charAt(0));
-    }
-
-    private int extractSelectedRowIndex(String input) {
-        return convertRowFrom(input.charAt(1));
-    }
-
-    private int convertColFrom(char cellInputCol) {
-        int selectedColIndex;
-        switch (cellInputCol) {
-            case 'a':
-                selectedColIndex = 0;
-                break;
-            case 'b':
-                selectedColIndex = 1;
-                break;
-            case 'c':
-                selectedColIndex = 2;
-                break;
-            case 'd':
-                selectedColIndex = 3;
-                break;
-            case 'e':
-                selectedColIndex = 4;
-                break;
-            case 'f':
-                selectedColIndex = 5;
-                break;
-            case 'g':
-                selectedColIndex = 6;
-                break;
-            case 'h':
-                selectedColIndex = 7;
-                break;
-            case 'i':
-                selectedColIndex = 8;
-                break;
-            case 'j':
-                selectedColIndex = 9;
-                break;
-            default:
-                throw new IllegalArgumentException("잘못된 COL 입력입니다.");
-        }
-        return selectedColIndex;
-    }
-
 
 
 }
