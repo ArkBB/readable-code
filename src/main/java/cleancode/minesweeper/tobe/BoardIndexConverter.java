@@ -26,7 +26,7 @@ public class BoardIndexConverter {
     public int convertRowFrom(String cellInputRow,int rowSize) {
         int selectedRowIndex = Integer.parseInt(cellInputRow) - 1;
         if (selectedRowIndex <0 || selectedRowIndex >= rowSize) {
-            throw new IllegalArgumentException("잘못된 ROW 입력입니다.");
+            throw new GameException("잘못된 ROW 입력입니다.");
         }
 
         return selectedRowIndex;

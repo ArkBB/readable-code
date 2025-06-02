@@ -59,7 +59,7 @@ public class Minesweeper {
         }
 
         if (doesUserChooseToOpenCell(userActionInput)) {
-            if (gameBoard.isLandMineCell(selectedColIndex, selectedRowIndex)) {
+            if (gameBoard.isLandMineCell(selectedRowIndex,selectedColIndex)) {
                 gameBoard.openSurroundedCell(selectedRowIndex,selectedColIndex);
                 changeGameStatusToLose();
                 return;

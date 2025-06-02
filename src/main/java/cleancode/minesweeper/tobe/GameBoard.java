@@ -1,5 +1,9 @@
 package cleancode.minesweeper.tobe;
 
+import cleancode.minesweeper.tobe.cell.Cell;
+import cleancode.minesweeper.tobe.cell.EmptyCell;
+import cleancode.minesweeper.tobe.cell.LandMineCell;
+import cleancode.minesweeper.tobe.cell.NumberCell;
 import cleancode.minesweeper.tobe.gameLevel.GameLevel;
 import java.util.Arrays;
 import java.util.Random;
@@ -19,33 +23,41 @@ public class GameBoard {
 
     public void initializeGame() {
 
-        int rowSize = board.length;
-        int colSize = board[0].length;
+        int rowSize = getLowSize();
+        int colSize = getColSize();
 
         for (int row = 0; row < rowSize; row++) {
             for (int col = 0; col < colSize; col++) {
-                board[row][col] = Cell.create();
+                board[row][col] = new EmptyCell();
             }
         }
 
         for (int i = 0; i < landMineCount; i++) {
             int landMineCol = new Random().nextInt(colSize);
             int landMineRow = new Random().nextInt(rowSize);
-            findCell(landMineRow, landMineCol).turnOnLandMine();
+
+            LandMineCell landMineCell = new LandMineCell();
+            board[landMineRow][landMineCol] = landMineCell;
         }
 
         for (int row = 0; row < rowSize; row++) {
             for (int col = 0; col < colSize; col++) {
-                if (isLandMineCell(row, row)) {
+                if (isLandMineCell(row, col)) {
                     continue;
                 }
                 int count = countNearbyLandMines(row, col);
-                findCell(row, col).updateNearbyLandMineCount(count);
+                if(count == 0){
+                    continue;
+                }
+
+                NumberCell numberCell = new NumberCell(count);
+                board[row][col] = numberCell;
+
             }
         }
     }
 
-    public boolean isLandMineCell(int selectedColIndex, int selectedRowIndex) {
+    public boolean isLandMineCell(int selectedRowIndex, int selectedColIndex) {
         return findCell(selectedRowIndex, selectedColIndex).isLandMine();
     }
 
@@ -54,28 +66,28 @@ public class GameBoard {
         int rowSize = getLowSize();
         int colSize = getColSize();
 
-        if (row - 1 >= 0 && col - 1 >= 0 && isLandMineCell(col - 1, row - 1)) {
+        if (row - 1 >= 0 && col - 1 >= 0 && isLandMineCell(row - 1,col - 1)) {
             count++;
         }
-        if (row - 1 >= 0 && isLandMineCell(col, row - 1)) {
+        if (row - 1 >= 0 && isLandMineCell( row - 1,col)) {
             count++;
         }
-        if (row - 1 >= 0 && col + 1 < colSize && isLandMineCell(col + 1, row - 1)) {
+        if (row - 1 >= 0 && col + 1 < colSize && isLandMineCell(row - 1,col + 1)) {
             count++;
         }
-        if (col - 1 >= 0 && isLandMineCell(col - 1, row)) {
+        if (col - 1 >= 0 && isLandMineCell(row,col - 1)) {
             count++;
         }
-        if (col + 1 < colSize && isLandMineCell(col + 1, row)) {
+        if (col + 1 < colSize && isLandMineCell( row,col + 1)) {
             count++;
         }
-        if (row + 1 < rowSize && col - 1 >= 0 && isLandMineCell(col - 1, row + 1)) {
+        if (row + 1 < rowSize && col - 1 >= 0 && isLandMineCell(row + 1,col - 1)) {
             count++;
         }
-        if (row + 1 < rowSize && isLandMineCell(col, row + 1)) {
+        if (row + 1 < rowSize && isLandMineCell( row + 1,col)) {
             count++;
         }
-        if (row + 1 < rowSize && col + 1 < colSize && isLandMineCell(col + 1, row + 1)) {
+        if (row + 1 < rowSize && col + 1 < colSize && isLandMineCell( row + 1,col + 1)) {
             count++;
         }
         return count;
@@ -100,8 +112,8 @@ public class GameBoard {
     }
 
     public void flag(int selectedRowIndex, int selectedColIndex) {
-        Cell flagCell = findCell(selectedRowIndex,selectedColIndex);
-        flagCell.flag();
+        Cell cell = findCell(selectedRowIndex,selectedColIndex);
+        cell.flag();
     }
 
     public void open(int selectedRowIndex, int selectedColIndex) {
@@ -124,7 +136,7 @@ public class GameBoard {
                 return;
             }
 
-            if (isLandMineCell(col, row)) {
+            if (isLandMineCell(row,col)) {
                 return;
             }
 
