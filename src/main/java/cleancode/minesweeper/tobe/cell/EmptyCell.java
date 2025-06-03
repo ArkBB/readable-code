@@ -2,7 +2,6 @@ package cleancode.minesweeper.tobe.cell;
 
 public class EmptyCell implements Cell {
 
-    private static final String EMPTY_SIGN = "■"; // 열었는데 비어있는 셀
 
     private final CellState cellState = CellState.initialize();
 
@@ -17,16 +16,14 @@ public class EmptyCell implements Cell {
     }
 
     @Override
-    public String getSign() {
+    public CellSnapshot getSnapShot(){
         if(cellState.isOpened()){
-            return EMPTY_SIGN;
+            return CellSnapshot.ofEmpty();
         }
-
         if(cellState.isFlagged()){
-            return FLAG_SIGN;
+            return CellSnapshot.ofFlag();
         }
-
-        return UNCHECKED_SIGN;
+        return CellSnapshot.ofUnchecked();
     }
 
     @Override
