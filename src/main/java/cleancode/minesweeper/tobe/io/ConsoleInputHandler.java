@@ -1,6 +1,5 @@
 package cleancode.minesweeper.tobe.io;
 
-import cleancode.minesweeper.tobe.BoardIndexConverter;
 import cleancode.minesweeper.tobe.position.CellPosition;
 import java.util.Scanner;
 

@@ -1,6 +1,6 @@
 package cleancode.minesweeper.tobe.game;
 
-import cleancode.minesweeper.tobe.BoardIndexConverter;
+import cleancode.minesweeper.tobe.io.BoardIndexConverter;
 import cleancode.minesweeper.tobe.GameBoard;
 import cleancode.minesweeper.tobe.GameException;
 import cleancode.minesweeper.tobe.gameLevel.GameLevel;
@@ -47,8 +47,6 @@ public class Minesweeper implements GameRunnable, GameInitializable {
 
                 CellPosition cellPosition = getCellInputFromUser();
                 String userActionInput = getActionInputFromUser();
-
-
 
                 actOnCell(cellPosition, userActionInput);
             } catch (GameException e) {
@@ -104,7 +102,7 @@ public class Minesweeper implements GameRunnable, GameInitializable {
         CellPosition cellPositionFromUser = inputHandler.getCellPositionFromUser();
 
         if(gameBoard.isInvalidCellPosition(cellPositionFromUser)){
-            throw new IllegalArgumentException("잘못된 자표를 입력하셨습니다.");
+            throw new IllegalArgumentException("잘못된 좌표를 입력하셨습니다.");
         }
 
         return cellPositionFromUser;

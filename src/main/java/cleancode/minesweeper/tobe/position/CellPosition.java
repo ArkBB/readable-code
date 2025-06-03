@@ -52,7 +52,7 @@ public class CellPosition {
 
     public CellPosition calculatePositionBy(RelativePosition relativePosition) {
 
-        if(this.canCalculatePositionBy(relativePosition))
+        if(this.canCalculatePositionBy(relativePosition)) // 이중 검증
             return CellPosition.of(
                     rowIndex + relativePosition.getDeltaRow(),
                     colIndex + relativePosition.getDeltaCol()
