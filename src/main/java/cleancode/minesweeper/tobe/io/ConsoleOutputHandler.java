@@ -3,17 +3,15 @@ package cleancode.minesweeper.tobe.io;
 import cleancode.minesweeper.tobe.GameBoard;
 import cleancode.minesweeper.tobe.GameException;
 import cleancode.minesweeper.tobe.cell.CellSnapshot;
-import cleancode.minesweeper.tobe.cell.CellSnapshotStatus;
+import cleancode.minesweeper.tobe.io.sign.CellSignFinder;
+import cleancode.minesweeper.tobe.io.sign.CellSignProvider;
 import cleancode.minesweeper.tobe.position.CellPosition;
 import java.util.List;
 import java.util.stream.IntStream;
 
 public class ConsoleOutputHandler implements OutputHandler {
 
-    private static final String EMPTY_SIGN = "■"; // 열었는데 비어있는 셀
-    private static final String LANDMINE_SIGN = "☼";
-    static final String UNCHECKED_SIGN = "□"; // 아직 확인하지 않은 셀
-    static final String FLAG_SIGN = "⚑";
+    public static final CellSignFinder CELL_SIGN_FINDER = new CellSignFinder();
 
     @Override
     public void showBoard(GameBoard board) {
@@ -27,7 +25,9 @@ public class ConsoleOutputHandler implements OutputHandler {
             for (int col = 0; col < board.getColSize(); col++) {
 
                 CellSnapshot snapshot = board.getSnapShot(CellPosition.of(row, col));
-                String cellSign = decideCellSignFrom(snapshot);
+                //String cellSign = CELL_SIGN_FINDER.findCellSignFrom(snapshot);
+
+                String cellSign = CellSignProvider.findCellSignFrom(snapshot);
 
                 System.out.print(cellSign + " ");
 
@@ -37,27 +37,6 @@ public class ConsoleOutputHandler implements OutputHandler {
         System.out.println();
     }
 
-    private String decideCellSignFrom(CellSnapshot snapshot) {
-        CellSnapshotStatus status = snapshot.getStatus();
-        if (status == CellSnapshotStatus.EMPTY){
-            return EMPTY_SIGN;
-        }
-        if (status == CellSnapshotStatus.FLAG){
-            return FLAG_SIGN;
-        }
-        if (status == CellSnapshotStatus.LANDMINE){
-            return LANDMINE_SIGN;
-        }
-        if (status == CellSnapshotStatus.NUMBER){
-            return String.valueOf(snapshot.getNearByLandMineCount());
-        }
-        if (status == CellSnapshotStatus.UNCHECKED){
-            return UNCHECKED_SIGN;
-        }
-
-        throw new IllegalArgumentException("확인할 수 없는 셀입니다.");
-
-    }
 
     private String generateColAlphabets(GameBoard board) {
         List<String> alphabets = IntStream.range(0, board.getColSize())
