@@ -1,11 +1,18 @@
 package cleancode.studycafe.tobe.io;
 
+import cleancode.studycafe.tobe.calculate.PriceCalculator;
 import cleancode.studycafe.tobe.model.StudyCafeLockerPass;
 import cleancode.studycafe.tobe.model.StudyCafePass;
 
 import java.util.List;
 
 public class OutputHandler {
+
+    private final PriceCalculator priceCalculator;
+
+    public OutputHandler(PriceCalculator priceCalculator) {
+        this.priceCalculator = priceCalculator;
+    }
 
     public void showWelcomeMessage() {
         System.out.println("*** 프리미엄 스터디카페 ***");
@@ -50,13 +57,14 @@ public class OutputHandler {
             System.out.println("사물함: " + lockerPass.display());
         }
 
-        double discountRate = selectedPass.getDiscountRate();
-        int discountPrice = (int) (selectedPass.getPrice() * discountRate);
+
+        int discountPrice = priceCalculator.getDiscountPrice(selectedPass);
         if (discountPrice > 0) {
             System.out.println("이벤트 할인 금액: " + discountPrice + "원");
         }
+        
+        int totalPrice = priceCalculator.getTotalPrice(discountPrice,selectedPass,lockerPass);
 
-        int totalPrice = selectedPass.getPrice() - discountPrice + (lockerPass != null ? lockerPass.getPrice() : 0);
         System.out.println("총 결제 금액: " + totalPrice + "원");
         System.out.println();
     }
