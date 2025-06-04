@@ -8,12 +8,13 @@ import cleancode.studycafe.tobe.model.StudyCafeLockerPass;
 import cleancode.studycafe.tobe.model.StudyCafePass;
 import cleancode.studycafe.tobe.model.StudyCafePassType;
 
+import cleancode.studycafe.tobe.reader.FileReader;
 import java.util.List;
 import java.util.Optional;
 
 public class StudyCafePassMachine {
 
-    private final StudyCafeFileHandler studyCafeFileHandler = new StudyCafeFileHandler();
+    private final StudyCafeFileHandler studyCafeFileHandler = new StudyCafeFileHandler(new FileReader());
     private final InputHandler inputHandler = new InputHandler();
     private final OutputHandler outputHandler = new OutputHandler();
 
