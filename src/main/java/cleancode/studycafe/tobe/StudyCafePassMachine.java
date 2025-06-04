@@ -32,16 +32,29 @@ public class StudyCafePassMachine {
             outputHandler.showPassListForSelection(Passes);
             StudyCafePass selectedPass = inputHandler.getSelectPass(Passes);
 
-            Optional<StudyCafeLockerPass> lockerPass = Optional.empty();
-
             if (studyCafePassType == StudyCafePassType.FIXED) {
-
                 List<StudyCafeLockerPass> lockerPasses = studyCafeFileHandler.readLockerPasses();
-                lockerPass = Optional.ofNullable(getStudyCafeLockerPass(lockerPasses, selectedPass));
+                StudyCafeLockerPass lockerPass = lockerPasses.stream()
+                        .filter(option ->
+                                option.getPassType() == selectedPass.getPassType()
+                                        && option.getDuration() == selectedPass.getDuration()
+                        )
+                        .findFirst()
+                        .orElse(null);
 
+                boolean lockerSelection = false;
+                if (lockerPass != null) {
+                    outputHandler.askLockerPass(lockerPass);
+                    lockerSelection = inputHandler.getLockerSelection();
+                }
+
+                if (lockerSelection) {
+                    outputHandler.showPassOrderSummary(selectedPass, lockerPass);
+                    return;
+                }
             }
+            outputHandler.showPassOrderSummary(selectedPass, null);
 
-            outputHandler.showPassOrderSummary(selectedPass, lockerPass);
 
         } catch (AppException e) {
             outputHandler.showSimpleMessage(e.getMessage());
