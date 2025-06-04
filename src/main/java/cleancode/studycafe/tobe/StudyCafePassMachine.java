@@ -23,38 +23,16 @@ public class StudyCafePassMachine {
             outputHandler.showWelcomeMessage();
             outputHandler.showAnnouncement();
 
-            outputHandler.askPassTypeSelection();
-            StudyCafePassType studyCafePassType = inputHandler.getPassTypeSelectingUserAction();
+            StudyCafePassType studyCafePassType = selectStudyCafePassType();
+            StudyCafePass selectedPass = getSelectedPass(studyCafePassType);
+            StudyCafeLockerPass lockerPass = findMatchingLockerPass(selectedPass);
 
-            List<StudyCafePass> studyCafePasses = studyCafeFileHandler.readStudyCafePasses();
-
-            List<StudyCafePass> Passes = getStudyCafePasses(studyCafePasses,studyCafePassType);
-            outputHandler.showPassListForSelection(Passes);
-            StudyCafePass selectedPass = inputHandler.getSelectPass(Passes);
-
-            if (studyCafePassType == StudyCafePassType.FIXED) {
-                List<StudyCafeLockerPass> lockerPasses = studyCafeFileHandler.readLockerPasses();
-                StudyCafeLockerPass lockerPass = lockerPasses.stream()
-                        .filter(option ->
-                                option.getPassType() == selectedPass.getPassType()
-                                        && option.getDuration() == selectedPass.getDuration()
-                        )
-                        .findFirst()
-                        .orElse(null);
-
-                boolean lockerSelection = false;
-                if (lockerPass != null) {
-                    outputHandler.askLockerPass(lockerPass);
-                    lockerSelection = inputHandler.getLockerSelection();
-                }
-
-                if (lockerSelection) {
-                    outputHandler.showPassOrderSummary(selectedPass, lockerPass);
-                    return;
-                }
+            if (lockerPass != null && askUseLocker(lockerPass)) {
+                outputHandler.showPassOrderSummary(selectedPass, lockerPass);
             }
-            outputHandler.showPassOrderSummary(selectedPass, null);
-
+            else {
+                outputHandler.showPassOrderSummary(selectedPass, null);
+            }
 
         } catch (AppException e) {
             outputHandler.showSimpleMessage(e.getMessage());
@@ -63,17 +41,40 @@ public class StudyCafePassMachine {
         }
     }
 
-    private static StudyCafeLockerPass getStudyCafeLockerPass(List<StudyCafeLockerPass> lockerPasses,
-                                                              StudyCafePass selectedPass) {
-        StudyCafeLockerPass lockerPass = lockerPasses.stream()
-            .filter(option ->
-                option.getPassType() == selectedPass.getPassType()
-                    && option.getDuration() == selectedPass.getDuration()
-            )
-            .findFirst()
-            .orElse(null);
-        return lockerPass;
+    private boolean askUseLocker(StudyCafeLockerPass lockerPass) {
+
+        outputHandler.askLockerPass(lockerPass);
+        return inputHandler.getLockerSelection();
+
     }
+
+    private StudyCafeLockerPass findMatchingLockerPass(StudyCafePass pass) {
+        if (pass.getPassType() != StudyCafePassType.FIXED) {
+            return null;
+        }
+
+        return studyCafeFileHandler.readLockerPasses().stream()
+                .filter(locker -> locker.getPassType() == pass.getPassType()
+                        && locker.getDuration() == pass.getDuration())
+                .findFirst()
+                .orElse(null);
+
+    }
+
+    private StudyCafePass getSelectedPass(StudyCafePassType studyCafePassType) {
+        List<StudyCafePass> studyCafePasses = studyCafeFileHandler.readStudyCafePasses();
+        List<StudyCafePass> passes = getStudyCafePasses(studyCafePasses, studyCafePassType);
+        outputHandler.showPassListForSelection(passes);
+        StudyCafePass selectedPass = inputHandler.getSelectPass(passes);
+        return selectedPass;
+    }
+
+    private StudyCafePassType selectStudyCafePassType() {
+        outputHandler.askPassTypeSelection();
+        StudyCafePassType studyCafePassType = inputHandler.getPassTypeSelectingUserAction();
+        return studyCafePassType;
+    }
+
 
     private static List<StudyCafePass> getStudyCafePasses(List<StudyCafePass> studyCafePasses,
                                                           StudyCafePassType studyCafePassType) {
