@@ -7,7 +7,9 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public enum StudyCafePassType implements StudyCafePassStrategy {
-    FIXED {
+    
+    FIXED("1인 고정석") {
+
         @Override
         public void execute(OutputHandler outputHandler, InputHandler inputHandler, StudyCafeFileHandler fileHandler) {
             StudyCafePass selectedPass = selectPass(this, outputHandler, inputHandler, fileHandler);
@@ -22,8 +24,14 @@ public enum StudyCafePassType implements StudyCafePassStrategy {
             outputHandler.showPassOrderSummary(selectedPass, useLocker ? lockerPass : null);
         }
     },
-    WEEKLY,
-    HOURLY;
+    WEEKLY("주 단위 이용권"),
+    HOURLY("시간 단위 이용권");
+
+    private final String description;
+
+    StudyCafePassType(String description) {
+        this.description = description;
+    }
 
     @Override
     public void execute(OutputHandler outputHandler, InputHandler inputHandler, StudyCafeFileHandler fileHandler) {
