@@ -47,4 +47,11 @@ public class StudyCafePass {
         return "";
     }
 
+    public boolean passTypeNotEqualTo(StudyCafePassType studyCafePassType) {
+        return passType != studyCafePassType;
+    }
+
+    public boolean passTypeEqualTo(StudyCafePassType studyCafePassType) {
+        return passType == studyCafePassType;
+    }
 }
