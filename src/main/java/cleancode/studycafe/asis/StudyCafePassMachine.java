@@ -9,6 +9,7 @@ import cleancode.studycafe.asis.model.StudyCafePass;
 import cleancode.studycafe.asis.model.StudyCafePassType;
 
 import java.util.List;
+import java.util.Optional;
 
 public class StudyCafePassMachine {
 
@@ -22,9 +23,9 @@ public class StudyCafePassMachine {
             outputHandler.showAnnouncement();
 
             StudyCafePass selectedPass = selectPass();
-            StudyCafeLockerPass lockerPass = selectLockerPass(selectedPass);
+            Optional<StudyCafeLockerPass> lockerPass = selectLockerPass(selectedPass);
 
-            outputHandler.showPassOrderSummary(selectedPass, lockerPass);
+            outputHandler.showPassOrderSummary(selectedPass, lockerPass.orElse(null));
         } catch (AppException e) {
             outputHandler.showSimpleMessage(e.getMessage());
         } catch (Exception e) {
@@ -52,10 +53,10 @@ public class StudyCafePassMachine {
 
     }
 
-    private StudyCafeLockerPass selectLockerPass(StudyCafePass selectedPass) {
+    private Optional<StudyCafeLockerPass> selectLockerPass(StudyCafePass selectedPass) {
 
         if(selectedPass.getPassType() != StudyCafePassType.FIXED) {
-            return null;
+            return Optional.empty();
         }
 
         StudyCafeLockerPass lockerPassCandidate = findLockerPassCandidateBy(selectedPass);
@@ -65,11 +66,11 @@ public class StudyCafePassMachine {
             boolean lockerSelection = inputHandler.getLockerSelection();
 
             if (lockerSelection) {
-                return lockerPassCandidate;
+                return Optional.of(lockerPassCandidate);
             }
         }
 
-        return null;
+        return Optional.empty();
     }
 
     private StudyCafeLockerPass findLockerPassCandidateBy(StudyCafePass selectedPass) {
