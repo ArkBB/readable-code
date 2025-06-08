@@ -33,31 +33,10 @@ public class StudyCafePassMachine {
             outputHandler.showPassListForSelection(passCandidates);
             StudyCafePass selectedPass = inputHandler.getSelectPass(passCandidates);
 
-            if (studyCafePassType == StudyCafePassType.HOURLY) {
+            StudyCafeLockerPass lockerPass = selectLockerPass(selectedPass);
 
-                outputHandler.showPassOrderSummary(selectedPass, null);
+            outputHandler.showPassOrderSummary(selectedPass, lockerPass);
 
-            } else if (studyCafePassType == StudyCafePassType.WEEKLY) {
-
-                outputHandler.showPassOrderSummary(selectedPass, null);
-
-            } else if (studyCafePassType == StudyCafePassType.FIXED) {
-
-                StudyCafeLockerPass lockerPass = selectLockerPass(selectedPass);
-
-                boolean lockerSelection = false;
-
-                if (lockerPass != null) {
-                    outputHandler.askLockerPass(lockerPass);
-                    lockerSelection = inputHandler.getLockerSelection();
-                }
-
-                if (lockerSelection) {
-                    outputHandler.showPassOrderSummary(selectedPass, lockerPass);
-                } else {
-                    outputHandler.showPassOrderSummary(selectedPass, null);
-                }
-            }
         } catch (AppException e) {
             outputHandler.showSimpleMessage(e.getMessage());
         } catch (Exception e) {
@@ -66,15 +45,31 @@ public class StudyCafePassMachine {
     }
 
     private StudyCafeLockerPass selectLockerPass(StudyCafePass selectedPass) {
+
+        if(selectedPass.getPassType() != StudyCafePassType.FIXED) {
+            return null;
+        }
+
         List<StudyCafeLockerPass> lockerPasses = studyCafeFileHandler.readLockerPasses();
 
-        return lockerPasses.stream()
-            .filter(option ->
-                option.getPassType() == selectedPass.getPassType()
-                    && option.getDuration() == selectedPass.getDuration()
-            )
-            .findFirst()
-            .orElse(null);
+        StudyCafeLockerPass lockerPassCandidate = lockerPasses.stream()
+                .filter(option ->
+                        option.getPassType() == selectedPass.getPassType()
+                                && option.getDuration() == selectedPass.getDuration()
+                )
+                .findFirst()
+                .orElse(null);
+
+        if (lockerPassCandidate != null) {
+            outputHandler.askLockerPass(lockerPassCandidate);
+            boolean lockerSelection = inputHandler.getLockerSelection();
+
+            if (lockerSelection) {
+                return lockerPassCandidate;
+            }
+        }
+
+        return null;
     }
 
 }
