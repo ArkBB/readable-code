@@ -5,6 +5,7 @@ import cleancode.studycafe.tobe.exception.AppException;
 import cleancode.studycafe.tobe.io.InputHandler;
 import cleancode.studycafe.tobe.io.OutputHandler;
 import cleancode.studycafe.tobe.io.StudyCafeFileHandler;
+import cleancode.studycafe.tobe.io.StudyCafeIOHandler;
 import cleancode.studycafe.tobe.model.StudyCafeLockerPass;
 import cleancode.studycafe.tobe.model.StudyCafePass;
 import cleancode.studycafe.tobe.model.StudyCafePassType;
@@ -18,11 +19,12 @@ public class StudyCafePassMachine {
     private final StudyCafeFileHandler studyCafeFileHandler = new StudyCafeFileHandler(new FileReader());
     private final InputHandler inputHandler = new InputHandler();
     private final OutputHandler outputHandler = new OutputHandler(new PriceCalculator());
+    private final StudyCafeIOHandler studyCafeIOHandler = new StudyCafeIOHandler(inputHandler, outputHandler);
 
     public void run() {
         try {
-            outputHandler.showWelcomeMessage();
-            outputHandler.showAnnouncement();
+            studyCafeIOHandler.showWelcomeMessage();
+            studyCafeIOHandler.showAnnouncement();
 
             StudyCafePassType studyCafePassType = selectStudyCafePassType();
             studyCafePassType.execute(outputHandler,inputHandler,studyCafeFileHandler);
