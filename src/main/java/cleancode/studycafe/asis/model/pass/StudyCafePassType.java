@@ -1,4 +1,4 @@
-package cleancode.studycafe.asis.model;
+package cleancode.studycafe.asis.model.pass;
 
 import java.util.Set;
 

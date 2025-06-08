@@ -1,8 +1,8 @@
 package cleancode.studycafe.asis.io;
 
 import cleancode.studycafe.asis.exception.AppException;
-import cleancode.studycafe.asis.model.StudyCafePass;
-import cleancode.studycafe.asis.model.StudyCafePassType;
+import cleancode.studycafe.asis.model.pass.StudyCafeSeatPass;
+import cleancode.studycafe.asis.model.pass.StudyCafePassType;
 
 import java.util.List;
 import java.util.Scanner;
@@ -26,7 +26,7 @@ public class InputHandler {
         throw new AppException("잘못된 입력입니다.");
     }
 
-    public StudyCafePass getSelectPass(List<StudyCafePass> passes) {
+    public StudyCafeSeatPass getSelectPass(List<StudyCafeSeatPass> passes) {
         String userInput = SCANNER.nextLine();
         int selectedIndex = Integer.parseInt(userInput) - 1;
         return passes.get(selectedIndex);
