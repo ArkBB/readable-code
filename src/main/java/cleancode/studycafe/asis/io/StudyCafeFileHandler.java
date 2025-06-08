@@ -12,8 +12,9 @@ import cleancode.studycafe.asis.model.pass.locker.StudyCafeLockerPass;
 import cleancode.studycafe.asis.model.pass.StudyCafeSeatPass;
 import cleancode.studycafe.asis.model.pass.StudyCafePassType;
 
-public class StudyCafeFileHandler {
+public class StudyCafeFileHandler implements PassReader{
 
+    @Override
     public StudyCafeSeatPasses readStudyCafePasses() {
         try {
             List<String> lines = Files.readAllLines(Paths.get("src/main/resources/cleancode/studycafe/pass-list.csv"));
@@ -35,7 +36,8 @@ public class StudyCafeFileHandler {
         }
     }
 
-    public StudyCafeLockerPasses readLockerPasses() {
+    @Override
+    public StudyCafeLockerPasses readStudyCafeLockerPasses() {
         try {
             List<String> lines = Files.readAllLines(Paths.get("src/main/resources/cleancode/studycafe/locker.csv"));
             List<StudyCafeLockerPass> lockerPasses = new ArrayList<>();
