@@ -38,7 +38,7 @@ public class StudyCafeSeatPass implements StudyCafePass{
     public int getPrice() {
         return price;
     }
-    
+
     public boolean isSameDurationType(StudyCafeLockerPass lockerPass) {
 
         return lockerPass.passTypeEqualTo(this.passType) &&
