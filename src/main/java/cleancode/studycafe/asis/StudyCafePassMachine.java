@@ -3,6 +3,7 @@ package cleancode.studycafe.asis;
 import cleancode.studycafe.asis.exception.AppException;
 import cleancode.studycafe.asis.io.StudyCafeFileHandler;
 import cleancode.studycafe.asis.io.StudyCafeIOHandler;
+import cleancode.studycafe.asis.model.order.StudyCafePassOrder;
 import cleancode.studycafe.asis.model.pass.locker.StudyCafeLockerPass;
 import cleancode.studycafe.asis.model.pass.locker.StudyCafeLockerPasses;
 import cleancode.studycafe.asis.model.pass.StudyCafeSeatPass;
@@ -25,7 +26,11 @@ public class StudyCafePassMachine {
             StudyCafeSeatPass selectedPass = selectPass();
             Optional<StudyCafeLockerPass> lockerPass = selectLockerPass(selectedPass);
 
-            studyCafeIOHandler.showPassOrderSummary(selectedPass, lockerPass.orElse(null));
+            StudyCafePassOrder passOrder = StudyCafePassOrder.of(
+                    selectedPass,
+                    lockerPass.orElse(null));
+
+            studyCafeIOHandler.showPassOrderSummary(passOrder);
         } catch (AppException e) {
             studyCafeIOHandler.showSimpleMessage(e.getMessage());
         } catch (Exception e) {
