@@ -10,6 +10,8 @@ import cleancode.studycafe.asis.model.pass.StudyCafeSeatPass;
 import cleancode.studycafe.asis.model.pass.StudyCafePassType;
 
 import cleancode.studycafe.asis.model.pass.StudyCafeSeatPasses;
+import cleancode.studycafe.asis.provider.LockerPassProvider;
+import cleancode.studycafe.asis.provider.SeatPassProvider;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,6 +19,13 @@ public class StudyCafePassMachine {
 
     private final StudyCafeFileHandler studyCafeFileHandler = new StudyCafeFileHandler();
     private final StudyCafeIOHandler studyCafeIOHandler = new StudyCafeIOHandler();
+    private final SeatPassProvider seatPassProvider;
+    private final LockerPassProvider lockerPassProvider;
+
+    public StudyCafePassMachine(SeatPassProvider seatPassProvider, LockerPassProvider lockerPassProvider) {
+        this.seatPassProvider = seatPassProvider;
+        this.lockerPassProvider = lockerPassProvider;
+    }
 
     public void run() {
         try {
@@ -48,8 +57,10 @@ public class StudyCafePassMachine {
     }
 
     private List<StudyCafeSeatPass> findPassCandidatesBy(StudyCafePassType studyCafePassType) {
-        StudyCafeSeatPasses allPasses = studyCafeFileHandler.readStudyCafePasses();
+        // 1. 어떤 데이터를 필요로 하는가
+        // 2. 데이터를 어디로부터 어떻게 가져올 것인가
 
+        StudyCafeSeatPasses allPasses = seatPassProvider.getSeatPasses();
         return allPasses.findPassBy(studyCafePassType);
 
     }
@@ -81,7 +92,7 @@ public class StudyCafePassMachine {
     }
 
     private Optional<StudyCafeLockerPass> findLockerPassCandidateBy(StudyCafeSeatPass selectedPass) {
-        StudyCafeLockerPasses allLockerPasses = studyCafeFileHandler.readLockerPasses();
+        StudyCafeLockerPasses allLockerPasses = lockerPassProvider.getLockerPasses();
 
         return allLockerPasses.findLockerPassBy(selectedPass);
     }
