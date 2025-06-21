@@ -1,6 +1,6 @@
 package cleancode.minesweeper.tobe.io;
 
-import cleancode.minesweeper.tobe.GameBoard;
+import cleancode.minesweeper.tobe.board.GameBoard;
 import cleancode.minesweeper.tobe.GameException;
 import cleancode.minesweeper.tobe.cell.CellSnapshot;
 import cleancode.minesweeper.tobe.io.sign.CellSignFinder;
