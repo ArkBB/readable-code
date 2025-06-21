@@ -11,6 +11,7 @@ import cleancode.minesweeper.tobe.minesweeper.board.position.CellPosition;
 import cleancode.minesweeper.tobe.minesweeper.board.position.CellPositions;
 import cleancode.minesweeper.tobe.minesweeper.board.position.RelativePosition;
 import java.util.List;
+import java.util.Stack;
 
 public class GameBoard {
 
@@ -159,28 +160,40 @@ public class GameBoard {
                 || cellPositionFromUser.isColIndexMoreThanOrEqual(colSize);
 
     }
+    
+    private void openSurroundedCell(CellPosition cellPosition) {
+        Stack<CellPosition> stack = new Stack<>();
+        stack.push(cellPosition);
 
-    public void openSurroundedCell(CellPosition cellPosition) {
+        while (!stack.isEmpty()) {
+            OpenAndPushCellAt(stack);
+        }
+    }
 
-            if (isOpenedCell(cellPosition)) {
-                return;
-            }
+    private void OpenAndPushCellAt(Stack<CellPosition> stack) {
 
-            if (isLandMineCellAt(cellPosition)) {
-                return;
-            }
+        CellPosition cellPosition = stack.pop();
 
-            openOneCellAt(cellPosition);
+        if (isOpenedCell(cellPosition)) {
+            return;
+        }
 
-            if (doesCellHaveLandMineCount(cellPosition)) {
-                return;
-                // (지뢰찾기 게임에서 숫자가 있는 칸을 열면 그 칸만 열리고 주변 빈 칸은 더 이상 열리지 않음)
-            }
+        if (isLandMineCellAt(cellPosition)) {
+            return;
+        }
+
+        openOneCellAt(cellPosition);
+
+        if (doesCellHaveLandMineCount(cellPosition)) {
+            return;
+            // (지뢰찾기 게임에서 숫자가 있는 칸을 열면 그 칸만 열리고 주변 빈 칸은 더 이상 열리지 않음)
+        }
 
         List<CellPosition> surroundedPositions = calculateSurroundedPosition(cellPosition, getLowSize(), getColSize());
         surroundedPositions
-                    .forEach(this::openSurroundedCell);
+                .forEach(this::openSurroundedCell);
 
+        surroundedPositions.forEach(stack::push);
 
     }
 
